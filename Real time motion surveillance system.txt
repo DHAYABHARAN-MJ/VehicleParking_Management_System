@@ -1,0 +1,22 @@
+Real time motion surveillance system:
+
+Modules:
+-------
+1. Database creation:
+   -Table creation with Car Number, In time, Out time, date, Total hours parked and rate.
+2. Web Page Creation
+   -Login Page with Permanent ID and Pass, Further it can be changed in future.
+   -Main Page with Search bar and sort function with features like Currently parked vehicle and also it can be filter according to the interval of two dates etc...
+   -Main page displays the Table which show Car Number, In time, Out time, date, Total hours parked and rate from SQL table 
+   -In Search Bar, We can search for our required car number and their history
+3. Number Plate detection:
+   -Using easyocr, From number plate Number will be detected and send it to the SQL table with Time Stamp. 
+
+How it works? :
+--------
+
+1. While Entering the parking, The camera fixed nearby will be track the number and send it to the database.
+2. In database, Car number will be noted with the date and time(Timestamp).
+3. In admin page, there will be mentioned that the total number of parking slots available, So that whenever car is entered there will be minus in slot and while leaving Slots will be addition in slot which will be displayed while entering.
+4. While Leaving it will scan the car number and fetch it from the database and according to the Difference between the Time the rate will be calculated.
+5. The rate will be displayed on the board while exiting and gate will be opened and exiting time will be noted on the database.

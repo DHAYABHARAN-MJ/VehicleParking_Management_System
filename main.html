@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Parking System</title>
+    <style>
+        /* Main styling for the body */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        /* Centering and styling for the search and sort area */
+        .search-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Styling the search box */
+        .search-box {
+            display: flex;
+            align-items: center;
+            border-radius: 25px;
+            border: 1px solid #ccc;
+            padding: 8px 15px;
+            width: 40%;
+            background-color: #ffffff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        /* Sort button styling */
+        .sort-button {
+            cursor: pointer;
+            padding: 8px 15px;
+            background-color: white;
+            color: #007bff;
+            border: 1px solid #007bff;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .sort-button:hover {
+            background-color: #f1f1f1;
+            box-shadow: 0px 4px 10px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Grid-style container for total slots display */
+        .slots-info-container {
+            display: grid;
+            place-items: center;
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #007bff;
+            color: white;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1em;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .slots-info {
+            text-align: center;
+        }
+
+        /* Styling the table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table th, table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+        /* Sort modal styling */
+        #sortModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .sort-modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .sort-modal-content button {
+            padding: 8px 15px;
+            margin: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .sort-modal-content button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Close button for modal */
+        .close-btn {
+            background-color: red;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .close-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Input styling inside the modal */
+        input[type="date"] {
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 8px;
+            width: 100%;
+            border: 1px solid #ccc;
+        }
+
+        input[type="checkbox"] {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="search-container">
+        <!-- Search Box with icon -->
+        <div class="search-box">
+            <img src="assets/search.png" alt="Search Icon" style="width: 20px; height: 20px;">
+            <input type="text" placeholder="Search car number..." id="search-bar" onkeyup="searchTable()">
+        </div>
+        <!-- Sort button with icon -->
+        <button class="sort-button" onclick="toggleSortModal()">
+            <img src="assets/sort.png" alt="Sort Icon" style="width: 20px; height: 20px;"> Sort
+        </button>
+    </div>
+
+    <!-- <div class="slots-info-container">
+        <div class="slots-info">Total Slots Available: <span id="totalSlots">200</span></div>
+    </div> -->
+
+    <table id="carTable">
+        <thead>
+            <tr>
+                <th>Car Number</th>
+                <th>In Time</th>
+                <th>Out Time</th>
+                <th>Date</th>
+                <th>Total Time Parked (Hrs)</th>
+                <th>Cost (₹)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data rows inserted dynamically -->
+        </tbody>
+    </table>
+
+    <!-- Sort Modal -->
+    <div id="sortModal">
+        <div class="sort-modal-content">
+            <h3>Sort Vehicles</h3>
+            <label><input type="checkbox" id="currentlyParked"> Currently Parked Vehicles</label>
+            <br>
+            <label for="fromDate">From:</label>
+            <input type="date" id="fromDate">
+            <br>
+            <label for="toDate">To:</label>
+            <input type="date" id="toDate">
+            <br>
+            <button onclick="applySort()">Apply</button>
+            <button onclick="clearFilters()">Clear All</button>
+            <button class="close-btn" onclick="closeSortModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Fetch data from PHP backend and load into the table
+        function loadTableData(data) {
+            const tableBody = document.getElementById("carTable").getElementsByTagName("tbody")[0];
+            tableBody.innerHTML = "";
+            data.forEach(row => {
+    const totalMinutes = row.total_time;
+    
+    // Calculate hours and minutes from total minutes
+    const hours = Math.floor(totalMinutes / 60); // Get the whole hours
+    const minutes = totalMinutes % 60; // Get the remainder minutes
+    
+    // Cost calculation (1 minute = 1 rupee)
+    const cost = totalMinutes; // 1 minute = 1 rupee
+
+    const newRow = tableBody.insertRow();
+    newRow.innerHTML = `
+        <td>${row.car_number}</td>
+        <td>${row.in_time}</td>
+        <td>${row.out_time || 'Currently Parked'}</td>
+        <td>${row.date}</td>
+        <td>${hours}hrs ${minutes}mins</td> <!-- Displaying time as hours and minutes -->
+        <td>${cost}</td>`; 
+});
+
+        }
+
+        // Fetch data from PHP
+        function fetchData(filters = {}) {
+            const queryParams = new URLSearchParams(filters).toString();
+            return fetch(`fetch_data.php?${queryParams}`)
+                .then(response => response.json())
+                .then(data => data)
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // Fetch and load data into table
+        fetchData().then(data => {
+            loadTableData(data);
+        });
+
+        // Search functionality
+        function searchTable() {
+            const filter = document.getElementById("search-bar").value.toUpperCase();
+            const rows = document.getElementById("carTable").getElementsByTagName("tr");
+
+            Array.from(rows).forEach(row => {
+                const cell = row.getElementsByTagName("td")[0]; // Search by car number
+                if (cell) {
+                    const text = cell.textContent || cell.innerText;
+                    row.style.display = text.toUpperCase().includes(filter) ? "" : "none";
+                }
+            });
+        }
+
+        // Toggle the Sort Modal
+        function toggleSortModal() {
+            document.getElementById("sortModal").style.display = "flex";
+        }
+
+        // Close Sort Modal
+        function closeSortModal() {
+            document.getElementById("sortModal").style.display = "none";
+        }
+
+        // Apply Sort and Filters
+        function applySort() {
+            const fromDate = document.getElementById("fromDate").value;
+            const toDate = document.getElementById("toDate").value;
+            const currentlyParked = document.getElementById("currentlyParked").checked;
+
+            const filters = {
+                from_date: fromDate,
+                to_date: toDate,
+                currently_parked: currentlyParked ? 1 : 0
+            };
+
+            fetchData(filters).then(data => {
+                loadTableData(data);
+            });
+        }
+
+        // Clear Sort and Filters
+        function clearFilters() {
+            document.getElementById("fromDate").value = "";
+            document.getElementById("toDate").value = "";
+            document.getElementById("currentlyParked").checked = false;
+
+            fetchData().then(data => {
+                loadTableData(data);
+            });
+        }
+    </script>
+
+</body>
+</html>
