@@ -250,6 +250,39 @@
         }
 
         // Fetch data from PHP
+        const sampleData = [
+        {
+            car_number: "TN 01 AB 1234",
+            in_time: "09:00 AM",
+            out_time: "11:30 AM",
+            date: "2025-01-05",
+            total_time: 150
+        },
+        {
+            car_number: "TN 22 CD 5678",
+            in_time: "10:15 AM",
+            out_time: "Currently Parked",
+            date: "2025-01-05",
+            total_time: 95
+        },
+        {
+            car_number: "KA 05 EF 9012",
+            in_time: "08:45 AM",
+            out_time: "12:00 PM",
+            date: "2025-01-04",
+            total_time: 195
+        },
+        {
+            car_number: "TN 10 GH 3456",
+            in_time: "07:30 AM",
+            out_time: "09:00 AM",
+            date: "2025-01-03",
+            total_time: 90
+        }
+    ];
+
+    // Load sample rows initially
+    loadTableData(sampleData);
         function fetchData(filters = {}) {
             const queryParams = new URLSearchParams(filters).toString();
             return fetch(`fetch_data.php?${queryParams}`)
